@@ -1,3 +1,4 @@
+import { HighlightedText } from "../components/HighlightedText";
 import { Field, FormatFn, GetFn } from "../models/field.model";
 
 export function MakeIntegerField<ObjType>(
@@ -10,6 +11,11 @@ export function MakeIntegerField<ObjType>(
     label,
     get,
     format,
-    component: (props) => format(get(props.obj)),
+    component: (props) => (
+      <HighlightedText
+        text={format(get(props.obj))}
+        highlight={props.highlight}
+      />
+    ),
   };
 }

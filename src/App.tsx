@@ -1,5 +1,5 @@
 import { Box, Grid, Heading, HStack, TabList, Tabs, Tab } from "@hope-ui/solid";
-import { Component, createMemo, For } from "solid-js";
+import { Component, createEffect, createMemo, For } from "solid-js";
 import { Outlet, useLocation, useNavigate } from "@solidjs/router";
 
 type TabInfo = {
@@ -18,6 +18,9 @@ export const App: Component = () => {
 
     return tabInfos.findIndex(($) => route.pathname.endsWith($.path)) ?? 0;
   });
+  createEffect(() => {
+    console.log(`tab index: ${tabIndex()}`);
+  });
   const navigate = useNavigate();
 
   return (
@@ -32,6 +35,8 @@ export const App: Component = () => {
         onChange={(index) => {
           navigate(tabInfos[index].path);
         }}
+        variant="pills"
+        p="$5"
       >
         <TabList>
           <For each={tabInfos}>{(info) => <Tab>{info.label}</Tab>}</For>

@@ -4,6 +4,7 @@ export type GetFn<ObjType, FieldType> = (obj: ObjType) => FieldType | undefined;
 export type FormatFn<FieldType> = (value: FieldType | undefined) => string;
 export type FieldComponent<ObjType, FieldType> = Component<{
   obj: ObjType;
+  highlight?: string;
 }>;
 
 export type Field<ObjType, FieldType> = {

@@ -14,6 +14,7 @@ import { Field } from "../models/field.model";
 type TableProps<T> = HopeTableProps & {
   fields: Field<T, any>[];
   data: T[];
+  highlight?: string;
 };
 export const Table: HopeComponent<"table", TableProps<any>> = (props) => {
   const [, otherProps] = splitProps(props, ["fields"]);
@@ -29,7 +30,11 @@ export const Table: HopeComponent<"table", TableProps<any>> = (props) => {
           {(obj) => (
             <Tr>
               <For each={props.fields}>
-                {(field) => <Td>{field.component({ obj })}</Td>}
+                {(field) => (
+                  <Td>
+                    {field.component({ obj, highlight: props.highlight })}
+                  </Td>
+                )}
               </For>
             </Tr>
           )}
