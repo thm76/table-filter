@@ -15,6 +15,7 @@ type TableProps<T> = HopeTableProps & {
   fields: Field<T, any>[];
   data: T[];
   highlight?: string;
+  filterable?: boolean
 };
 export const Table: HopeComponent<"table", TableProps<any>> = (props) => {
   const [, otherProps] = splitProps(props, ["fields"]);

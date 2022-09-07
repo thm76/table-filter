@@ -11,7 +11,6 @@ export const HighlightedText: Component<{
   highlight?: string;
 }> = (props) => {
   const parts = createMemo<Part[]>(() => {
-    console.log(`find "${props.highlight}" in "${props.text}"`);
     if (typeof props.highlight !== "string" || props.highlight.trim() === "") {
       return [{ text: props.text, type: "normal" }];
     }

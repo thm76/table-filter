@@ -17,5 +17,39 @@ export function MakeIntegerField<ObjType>(
         highlight={props.highlight}
       />
     ),
+    filterConfigs: [
+      {
+        label: ">",
+        filterFn: (obj, data) => {
+          const filter =
+            typeof data() === "string"
+              ? parseInt(data() as unknown as string)
+              : data();
+          if (isNaN(filter)) {
+            return true;
+          }
+          if (typeof get(obj) !== "number" || isNaN(get(obj) as number)) {
+            return true;
+          }
+          return (get(obj) as number) > filter;
+        },
+      },
+      {
+        label: "<",
+        filterFn: (obj, data) => {
+          const filter =
+            typeof data() === "string"
+              ? parseInt(data() as unknown as string)
+              : data();
+          if (isNaN(filter)) {
+            return true;
+          }
+          if (typeof get(obj) !== "number" || isNaN(get(obj) as number)) {
+            return true;
+          }
+          return (get(obj) as number) < filter;
+        },
+      },
+    ],
   };
 }

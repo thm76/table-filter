@@ -5,7 +5,9 @@ specifiers:
   '@solidjs/router': ^0.4.3
   '@stitches/core': ^1.2.8
   '@types/node': ^18.7.15
+  icons: link:@fortawesome/free/solid/svg/icons
   prettier: ^2.7.1
+  solid-fa: ^0.1.0
   solid-js: ^1.5.4
   solid-transition-group: ^0.0.11
   vite: ^3.1.0
@@ -15,6 +17,8 @@ dependencies:
   '@hope-ui/solid': 0.6.7_4ddgkz4q67bb2nzibxa5sjagay
   '@solidjs/router': 0.4.3_solid-js@1.5.4
   '@stitches/core': 1.2.8
+  icons: link:@fortawesome/free/solid/svg/icons
+  solid-fa: 0.1.0_solid-js@1.5.4
   solid-js: 1.5.4
   solid-transition-group: 0.0.11_solid-js@1.5.4
 
@@ -888,6 +892,14 @@ packages:
     resolution: {integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==}
     hasBin: true
     dev: true
+
+  /solid-fa/0.1.0_solid-js@1.5.4:
+    resolution: {integrity: sha512-5DSFt0aibr5FS8jssadXKmG2NEubjuvxxqrJDh8ingYNAFP9dextiG0w0Wn+ssdrUUEwDxIAN31g2OMBQI7p+A==}
+    peerDependencies:
+      solid-js: ^1.0.0
+    dependencies:
+      solid-js: 1.5.4
+    dev: false
 
   /solid-js/1.5.4:
     resolution: {integrity: sha512-+65anSHhH27htkhP5LuC912fviMIckgc7/yN+WWrKhS9Kp3dvtDNl5/m4GWX1lpCvcubjShqJjGt16HET5z5Ig==}
