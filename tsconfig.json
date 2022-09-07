@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module":"ESNext",
+    "moduleResolution": "Node",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "strict": true,
+    "lib": ["dom", "esnext"],
+    "types": ["node"]
+  }
+}
