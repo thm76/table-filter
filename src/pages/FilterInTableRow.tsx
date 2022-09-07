@@ -9,7 +9,7 @@ export const FilterInTableRow: Component = () => (
   <Grid gap="$3">
     <Heading level={2}>Option 1</Heading>
     <Tile>
-      <Table fields={TableFields} data={useData()} />
+      <Table fields={TableFields} data={useData()} filterable />
     </Tile>
   </Grid>
 );

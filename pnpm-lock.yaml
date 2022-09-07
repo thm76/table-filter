@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fortawesome/free-regular-svg-icons': ^6.2.0
   '@fortawesome/free-solid-svg-icons': ^6.2.0
   '@hope-ui/solid': ^0.6.7
   '@solidjs/router': ^0.4.3
@@ -14,6 +15,7 @@ specifiers:
   vite-plugin-solid: ^2.3.0
 
 dependencies:
+  '@fortawesome/free-regular-svg-icons': 6.2.0
   '@fortawesome/free-solid-svg-icons': 6.2.0
   '@hope-ui/solid': 0.6.7_4ddgkz4q67bb2nzibxa5sjagay
   '@solidjs/router': 0.4.3_solid-js@1.5.4
@@ -366,6 +368,14 @@ packages:
     resolution: {integrity: sha512-rBevIsj2nclStJ7AxTdfsa3ovHb1H+qApwrxcTVo+NNdeJiB9V75hsKfrkG5AwNcRUNxrPPiScGYCNmLMoh8pg==}
     engines: {node: '>=6'}
     requiresBuild: true
+    dev: false
+
+  /@fortawesome/free-regular-svg-icons/6.2.0:
+    resolution: {integrity: sha512-M1dG+PAmkYMTL9BSUHFXY5oaHwBYfHCPhbJ8qj8JELsc9XCrUJ6eEHWip4q0tE+h9C0DVyFkwIM9t7QYyCpprQ==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.0
     dev: false
 
   /@fortawesome/free-solid-svg-icons/6.2.0:
