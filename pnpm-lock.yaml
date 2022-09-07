@@ -1,11 +1,11 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fortawesome/free-solid-svg-icons': ^6.2.0
   '@hope-ui/solid': ^0.6.7
   '@solidjs/router': ^0.4.3
   '@stitches/core': ^1.2.8
   '@types/node': ^18.7.15
-  icons: link:@fortawesome/free/solid/svg/icons
   prettier: ^2.7.1
   solid-fa: ^0.1.0
   solid-js: ^1.5.4
@@ -14,10 +14,10 @@ specifiers:
   vite-plugin-solid: ^2.3.0
 
 dependencies:
+  '@fortawesome/free-solid-svg-icons': 6.2.0
   '@hope-ui/solid': 0.6.7_4ddgkz4q67bb2nzibxa5sjagay
   '@solidjs/router': 0.4.3_solid-js@1.5.4
   '@stitches/core': 1.2.8
-  icons: link:@fortawesome/free/solid/svg/icons
   solid-fa: 0.1.0_solid-js@1.5.4
   solid-js: 1.5.4
   solid-transition-group: 0.0.11_solid-js@1.5.4
@@ -360,6 +360,20 @@ packages:
     resolution: {integrity: sha512-0Ulu3B/dqQplUUSqnTx0foSrlYuMN+GTtlJWvNJwt6Fr7/PqmlR/Y08o6/+bxDWr6p3roBJRaQ51MDZsNmEhhw==}
     dependencies:
       '@floating-ui/core': 0.6.2
+    dev: false
+
+  /@fortawesome/fontawesome-common-types/6.2.0:
+    resolution: {integrity: sha512-rBevIsj2nclStJ7AxTdfsa3ovHb1H+qApwrxcTVo+NNdeJiB9V75hsKfrkG5AwNcRUNxrPPiScGYCNmLMoh8pg==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: false
+
+  /@fortawesome/free-solid-svg-icons/6.2.0:
+    resolution: {integrity: sha512-UjCILHIQ4I8cN46EiQn0CZL/h8AwCGgR//1c4R96Q5viSRwuKVo0NdQEc4bm+69ZwC0dUvjbDqAHF1RR5FA3XA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.2.0
     dev: false
 
   /@hope-ui/solid/0.6.7_4ddgkz4q67bb2nzibxa5sjagay:
