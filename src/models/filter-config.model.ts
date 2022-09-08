@@ -2,5 +2,5 @@ import { Accessor } from "solid-js";
 
 export type FilterConfig<ObjType, FieldType> = {
   label: string;
-  filterFn: (obj: ObjType, data: Accessor<FieldType>) => boolean;
+  filterFn: (obj: ObjType, data: FieldType) => boolean;
 };

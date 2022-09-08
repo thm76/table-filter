@@ -1,4 +1,7 @@
 import {
+  Button,
+  FormControl,
+  FormLabel,
   Grid,
   HopeComponent,
   HStack,
@@ -31,160 +34,312 @@ import {
 import {
   splitProps,
   For,
+  Index,
   Show,
   createMemo,
   createSignal,
-  createEffect,
 } from "solid-js";
 import { Fa } from "solid-fa";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { Field } from "../models/field.model";
 import { Filter } from "../models/filter.model";
-import { createStore } from "solid-js/store";
-import { FilterStore } from "./FilterPanel";
 
 type TableProps<T> = HopeTableProps & {
   fields: Field<T, any>[];
   data: T[];
   highlight?: string;
-  filterable?: boolean;
+  filterMode?: "off" | "in-table" | "advanced" | "simple";
 };
+
 export const Table: HopeComponent<"table", TableProps<any>> = (props) => {
-  const [, otherProps] = splitProps(props, ["fields"]);
+  const [, otherProps] = splitProps(props, ["fields", "data", "filterMode"]);
 
-  const [filterStore, setFilterStore] = createStore<FilterStore>({
-    filters: [],
-  });
+  const [filters, setFilters] = createSignal(
+    props.filterMode === "in-table"
+      ? props.fields.map((field) => ({ field } as Filter<any, any>))
+      : props.filterMode === "simple"
+      ? [
+          {
+            config: {
+              label: "Filter",
+              filterFn: (obj, data) =>
+                props.fields.some((field) => {
+                  const filterText = data ?? "";
+                  if (filterText.trim() === "") {
+                    return true;
+                  }
+                  const formatted = field.format(field.get(obj)).toLowerCase();
+                  return formatted.indexOf(filterText.toLowerCase()) !== -1;
+                }),
+            },
+          } as Filter<any, any>,
+        ]
+      : []
+  );
 
-  const filters = createMemo(() => filterStore.filters.filter(($) => $.config));
+  const filterableFields = props.fields.filter(
+    ($) => $.filterConfigs.length > 0
+  );
 
   const filteredData = createMemo(() =>
     props.data.filter((obj) =>
-      filters().every((filter) => filter.config.filterFn(obj, filter.data[0]))
+      filters()
+        .filter(($) => $.config)
+        .every((filter) => filter.config!.filterFn(obj, filter.data))
     )
   );
 
-  createEffect(() => {
-    console.log(
-      filters().map(
-        ($) => `${$.field?.label} ${$.config?.label} ${$.data[0]()}`
-      )
-    );
-  });
-
   return (
-    <HopeTable {...otherProps}>
-      <Thead>
-        <Tr>
-          <For each={props.fields}>
-            {(field) => {
-              let filter: Filter<any, any, any> = filterStore.filters.find(
-                ($) => $.field === field
-              )!;
-              if (!filter) {
-                filter = { field, data: createSignal() };
-                setFilterStore("filters", ($) => [...$, filter]);
-              }
-
+    <Grid gap="$2">
+      <Show when={props.filterMode === "simple"} keyed>
+        <FormControl>
+          <FormLabel for="filter">{filters()[0].config!.label}</FormLabel>
+          <Input
+            id="filter"
+            value={filters()[0].data}
+            onInput={(e) => {
+              setFilters(($) => [
+                { ...$[0], data: e.currentTarget.value },
+                ...$.slice(1),
+              ]);
+            }}
+          />
+        </FormControl>
+      </Show>
+      <Show when={props.filterMode === "advanced"} keyed>
+        <Grid gridTemplateColumns="30px 1fr" gap="$2" alignItems="center">
+          <Index each={filters()}>
+            {(filter, index) => {
+              console.log(
+                `%cfilterable: [${filterableFields
+                  .map(($) => `"${$.label}"`)
+                  .join(", ")}]`,
+                "color: red"
+              );
               return (
-                <Th>
-                  <HStack gap="$2" justifyContent="space-between">
-                    {field.label}
-                    <Show
-                      when={props.filterable && field.filterConfigs.length > 0}
+                <>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setFilters(($) => [
+                        ...$.slice(0, index),
+                        ...$.slice(index + 1),
+                      ]);
+                    }}
+                  >
+                    -
+                  </Button>
+                  <Grid gridTemplateColumns="1fr 1fr 1fr" gap="$2">
+                    <Select
+                      value={filter().field?.label ?? -1}
+                      onChange={(value) => {
+                        const field = props.fields.find(
+                          ($) => $.label === value
+                        );
+                        if (field) {
+                          setFilters(($) => [
+                            ...$.slice(0, index),
+                            { ...$[index], field, config: undefined },
+                            ...$.slice(index + 1),
+                          ]);
+                        }
+                      }}
                     >
-                      <Popover placement="bottom-end">
-                        <PopoverTrigger
-                          as={IconButton}
-                          aria-label="Filter"
-                          size="sm"
-                          variant={
-                            filter.config === undefined ? "neutral" : "subtle"
+                      <SelectTrigger>
+                        <SelectPlaceholder>Select column</SelectPlaceholder>
+                        <SelectValue />
+                        <SelectIcon />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectListbox>
+                          <For each={filterableFields}>
+                            {(field) => (
+                              <SelectOption value={field.label}>
+                                <SelectOptionText>
+                                  {field.label}
+                                </SelectOptionText>
+                                <SelectOptionIndicator />
+                              </SelectOption>
+                            )}
+                          </For>
+                        </SelectListbox>
+                      </SelectContent>
+                    </Select>
+                    <Show when={filter().field} keyed>
+                      <Select
+                        value={filter().config?.label ?? -1}
+                        onChange={(value) => {
+                          const config = filter().field!.filterConfigs.find(
+                            ($) => $.label === value
+                          );
+                          if (config) {
+                            setFilters(($) => [
+                              ...$.slice(0, index),
+                              { ...$[index], config },
+                              ...$.slice(index + 1),
+                            ]);
                           }
-                          icon={<Fa icon={faFilter} />}
-                        />
-                        <PopoverContent zIndex={2}>
-                          <PopoverArrow />
-                          <PopoverCloseButton />
-                          <PopoverBody>
-                            <Grid p="$10 $2 $2 $2" gap="$2">
-                              <Select
-                                value={filter.config?.label ?? -1}
-                                onChange={(value) => {
-                                  const index = filterStore.filters.findIndex(
-                                    ($) => $.field?.label === field.label
-                                  );
-                                  setFilterStore(
-                                    "filters",
-                                    index,
-                                    "config",
-                                    (filter.field?.filterConfigs ?? []).find(
-                                      ($) => $.label === value
-                                    )
-                                  );
-                                }}
-                              >
-                                <SelectTrigger>
-                                  <SelectPlaceholder>
-                                    Choose...
-                                  </SelectPlaceholder>
-                                  <SelectValue />
-                                  <SelectIcon />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectListbox>
-                                    <SelectOption value={-1}>
-                                        <SelectOptionText>(All)</SelectOptionText>
-                                      <SelectOptionIndicator />
-                                    </SelectOption>
-                                    <For
-                                      each={filter.field?.filterConfigs ?? []}
-                                    >
-                                      {(config) => (
-                                        <SelectOption value={config.label}>
-                                          <SelectOptionText>
-                                            {config.label}
-                                          </SelectOptionText>
-                                          <SelectOptionIndicator />
-                                        </SelectOption>
-                                      )}
-                                    </For>
-                                  </SelectListbox>
-                                </SelectContent>
-                              </Select>
-                              <Input
-                                value={filter.data[0]()}
-                                onInput={(e) => {
-                                  filter.data[1](e.currentTarget.value);
-                                }}
-                              />
-                            </Grid>
-                          </PopoverBody>
-                        </PopoverContent>
-                      </Popover>
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectPlaceholder>Choose...</SelectPlaceholder>
+                          <SelectValue />
+                          <SelectIcon />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectListbox>
+                            <For each={filter().field!.filterConfigs}>
+                              {(config) => (
+                                <SelectOption value={config.label}>
+                                  <SelectOptionText>
+                                    {config.label}
+                                  </SelectOptionText>
+                                  <SelectOptionIndicator />
+                                </SelectOption>
+                              )}
+                            </For>
+                          </SelectListbox>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        value={filter().data}
+                        onInput={(e) => {
+                          setFilters(($) => [
+                            ...$.slice(0, index),
+                            { ...$[index], data: e.currentTarget.value },
+                            ...$.slice(index + 1),
+                          ]);
+                        }}
+                      />
                     </Show>
-                  </HStack>
-                </Th>
+                  </Grid>
+                </>
               );
             }}
+          </Index>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              setFilters(($) => [...$, {}]);
+            }}
+          >
+            +
+          </Button>
+        </Grid>
+      </Show>
+      <HopeTable {...otherProps}>
+        <Thead>
+          <Tr>
+            <Index each={props.fields}>
+              {(field, index) => {
+                return (
+                  <Th>
+                    <HStack gap="$2" justifyContent="space-between">
+                      {field().label}
+                      <Show when={props.filterMode === "in-table"} keyed>
+                        <Popover placement="bottom-end">
+                          <PopoverTrigger
+                            as={IconButton}
+                            aria-label="Filter"
+                            size="sm"
+                            variant={
+                              filters()[index].config === undefined
+                                ? "neutral"
+                                : "subtle"
+                            }
+                            icon={<Fa icon={faFilter} />}
+                          />
+                          <PopoverContent zIndex={2}>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverBody>
+                              <Grid p="$10 $2 $2 $2" gap="$2">
+                                <Select
+                                  value={filters()[index].config?.label ?? -1}
+                                  onChange={(value) => {
+                                    const config = field().filterConfigs.find(
+                                      ($) => $.label === value
+                                    );
+                                    if (config) {
+                                      setFilters(($) => [
+                                        ...$.slice(0, index),
+                                        { ...$[index], config },
+                                        ...$.slice(index + 1),
+                                      ]);
+                                    }
+                                  }}
+                                >
+                                  <SelectTrigger>
+                                    <SelectPlaceholder>
+                                      Choose...
+                                    </SelectPlaceholder>
+                                    <SelectValue />
+                                    <SelectIcon />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectListbox>
+                                      <SelectOption value={-1}>
+                                        <SelectOptionText>
+                                          (All)
+                                        </SelectOptionText>
+                                        <SelectOptionIndicator />
+                                      </SelectOption>
+                                      <Index each={field().filterConfigs}>
+                                        {(config) => (
+                                          <SelectOption value={config().label}>
+                                            <SelectOptionText>
+                                              {config().label}
+                                            </SelectOptionText>
+                                            <SelectOptionIndicator />
+                                          </SelectOption>
+                                        )}
+                                      </Index>
+                                    </SelectListbox>
+                                  </SelectContent>
+                                </Select>
+                                <Input
+                                  value={filters()[index].data}
+                                  onInput={(e) => {
+                                    setFilters(($) => [
+                                      ...$.slice(0, index),
+                                      {
+                                        ...$[index],
+                                        data: e.currentTarget.value,
+                                      },
+                                      ...$.slice(index + 1),
+                                    ]);
+                                  }}
+                                />
+                              </Grid>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                      </Show>
+                    </HStack>
+                  </Th>
+                );
+              }}
+            </Index>
+          </Tr>
+        </Thead>
+        <Tbody>
+          <For each={filteredData()}>
+            {(obj) => (
+              <Tr>
+                <For each={props.fields}>
+                  {(field) => (
+                    <Td>
+                      {field.component({ obj, highlight: props.highlight })}
+                    </Td>
+                  )}
+                </For>
+              </Tr>
+            )}
           </For>
-        </Tr>
-      </Thead>
-      <Tbody>
-        <For each={filteredData()}>
-          {(obj) => (
-            <Tr>
-              <For each={props.fields}>
-                {(field) => (
-                  <Td>
-                    {field.component({ obj, highlight: props.highlight })}
-                  </Td>
-                )}
-              </For>
-            </Tr>
-          )}
-        </For>
-      </Tbody>
-    </HopeTable>
+        </Tbody>
+      </HopeTable>
+    </Grid>
   );
 };

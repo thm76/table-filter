@@ -19,12 +19,12 @@ export function MakeIntegerField<ObjType>(
     ),
     filterConfigs: [
       {
-        label: ">",
+        label: "is more than",
         filterFn: (obj, data) => {
           const filter =
-            typeof data() === "string"
-              ? parseInt(data() as unknown as string)
-              : data();
+            typeof data === "string"
+              ? parseInt(data as unknown as string)
+              : data;
           if (isNaN(filter)) {
             return true;
           }
@@ -35,12 +35,12 @@ export function MakeIntegerField<ObjType>(
         },
       },
       {
-        label: "<",
+        label: "is less than",
         filterFn: (obj, data) => {
           const filter =
-            typeof data() === "string"
-              ? parseInt(data() as unknown as string)
-              : data();
+            typeof data === "string"
+              ? parseInt(data as unknown as string)
+              : data;
           if (isNaN(filter)) {
             return true;
           }

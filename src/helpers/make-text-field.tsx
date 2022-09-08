@@ -19,25 +19,25 @@ export function MakeTextField<ObjType>(
     ),
     filterConfigs: [
       {
-        label: "Contains",
+        label: "contains",
         filterFn: (obj, data) => {
-          if (typeof data() !== "string" || data().trim() === "") {
+          if (typeof data !== "string" || data.trim() === "") {
             return true;
           }
           return (
-            (get(obj) ?? "").toLowerCase().indexOf(data().toLowerCase()) !== -1
+            (get(obj) ?? "").toLowerCase().indexOf(data.toLowerCase()) !== -1
           );
         },
       },
       {
-        label: "Starts with",
+        label: "starts with",
         filterFn: (obj, data) => {
-          if (typeof data() !== "string" || data().trim() === "") {
+          if (typeof data !== "string" || data.trim() === "") {
             return true;
           }
           return (get(obj) ?? "")
             .toLowerCase()
-            .startsWith(data().toLowerCase());
+            .startsWith(data.toLowerCase());
         },
       },
     ],

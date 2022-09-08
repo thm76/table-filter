@@ -7,9 +7,9 @@ import { useData } from "../providers/DataProvider";
 
 export const FilterInTableRow: Component = () => (
   <Grid gap="$3">
-    <Heading level={2}>Option 1</Heading>
+    <Heading level={2}>Filters inside table headers</Heading>
     <Tile>
-      <Table fields={TableFields} data={useData()} filterable />
+      <Table fields={TableFields} data={useData()} filterMode="in-table" />
     </Tile>
   </Grid>
 );

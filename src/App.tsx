@@ -18,9 +18,6 @@ export const App: Component = () => {
 
     return tabInfos.findIndex(($) => route.pathname.endsWith($.path)) ?? 0;
   });
-  createEffect(() => {
-    console.log(`tab index: ${tabIndex()}`);
-  });
   const navigate = useNavigate();
 
   return (
