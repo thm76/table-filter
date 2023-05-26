@@ -1,5 +1,5 @@
-import { Box, Grid, Heading, HStack, TabList, Tabs, Tab } from "@hope-ui/solid";
-import { Component, createEffect, createMemo, For } from "solid-js";
+import { Box, Grid, Heading, HStack, Tab, TabList, Tabs } from "@hope-ui/solid";
+import { Component, createMemo, For } from "solid-js";
 import { Outlet, useLocation, useNavigate } from "@solidjs/router";
 
 type TabInfo = {
@@ -23,7 +23,7 @@ export const App: Component = () => {
   return (
     <Grid gridTemplateRows="auto auto 1fr">
       <HStack as="header" h={60} bg="black" color="white" p="$5">
-        <Heading level={1} size="xl">
+        <Heading level={1} size="xl" aria-label="1 2 3">
           Table filters
         </Heading>
       </HStack>

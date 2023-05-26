@@ -9,6 +9,7 @@ type Part = {
 export const HighlightedText: Component<{
   text: string;
   highlight?: string;
+  ariaLabel?: string;
 }> = (props) => {
   const parts = createMemo<Part[]>(() => {
     if (typeof props.highlight !== "string" || props.highlight.trim() === "") {
@@ -58,10 +59,16 @@ export const HighlightedText: Component<{
   });
 
   return (
-    <For each={parts()}>
-      {($) =>
-        $.type === "normal" ? <Text as="span">{$.text}</Text> : <Text as="strong">{$.text}</Text>
-      }
-    </For>
+    <Text as="span" aria-label={props.ariaLabel}>
+      <For each={parts()}>
+        {($) =>
+          $.type === "normal" ? (
+            <Text as="span">{$.text}</Text>
+          ) : (
+            <Text as="strong">{$.text}</Text>
+          )
+        }
+      </For>
+    </Text>
   );
 };

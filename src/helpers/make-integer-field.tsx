@@ -15,6 +15,7 @@ export function MakeIntegerField<ObjType>(
       <HighlightedText
         text={format(get(props.obj))}
         highlight={props.highlight}
+        ariaLabel={format(get(props.obj)).split("").join(" ")}
       />
     ),
     filterConfigs: [
